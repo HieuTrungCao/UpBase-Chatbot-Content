@@ -1,0 +1,32 @@
+PROMPT_HOOK: |
+  Với vai trò là một nhà sáng tạo nội dung để quảng cáo sản phẩm trên TikTok, hãy viết một câu Hook để  gây ấn tượng cho người xem theo cấu trúc kịch bản {}.
+  Mô tả sản phẩm: {},
+  Một số câu Hook mẫu của video trên TikTok: {}
+  Câu Hook:
+
+PROMPT_INTRO: |
+  Bạn là một nhà sáng tạo nội dung để quảng cáo sản phẩm.
+  Hãy viết phần mở đầu của nội dung quảng cáo theo phong cách "{}"dựa vào câu Hook cho trước và theo cấu trúc kịch bản {}.
+  Mô tả sản phẩm: {}.
+  Câu Hook: {}.
+  Phần mở đầu có độ dài từ 20 đến 30 từ.
+  Phần mở đầu: 
+
+PROMPT_MAIN: |
+  Với vai trò là một nhà sáng tạo nội dung quảng cáo sản phẩm trên TikTok, hãy viết phần thân của nội dung
+  dựa vào câu hook và phần mở đầu cho trước theo cấu trúc {}.
+  Mô tả sản phẩm: {}
+  Câu Hook: {}
+  Phần mở đầu: {}
+  Phần thân có độ dài từ 50 đến 100 từ.
+  Phần thân:
+
+PROMPT_END: |
+  Bạn là một nhà sáng tạo nội dung đẻ quảng cáo sản phẩm trên TikTok.
+  Hãy viết phần kết của nội dung dựa vào câu hook, phần mở đầu, phần thân cho trước theo cấu trúc {}.
+  Mô tả sản phẩm: {}
+  Câu hook: {}
+  Phần mở đầu: {}
+  Phần thân: {}
+  Phần kết có độ dài từ 20 đến 30 từ.
+  Phần kết:
