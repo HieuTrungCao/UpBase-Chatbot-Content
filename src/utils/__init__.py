@@ -1,2 +1,2 @@
 from .resp_queue import SingletonQueue
-from .callback import call_openai
+from .callback import call_llm

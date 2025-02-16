@@ -3,7 +3,7 @@ from src.constants import CALL_OPENAI
 
 resp_queue = SingletonQueue.get_instance()
 
-def call_openai():
+def call_llm():
     while True:
         try:
             response = resp_queue.get(timeout=1)
