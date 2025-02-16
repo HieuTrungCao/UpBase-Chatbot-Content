@@ -18,7 +18,7 @@ class SingletonGPT:
 
     @staticmethod
     def get_instance():
-        with SingletonGPT.__lock():
+        with SingletonGPT.__lock:
             if SingletonGPT.__instance is None:
                 SingletonGPT.__instance = SingletonGPT()
             return SingletonGPT.__instance
