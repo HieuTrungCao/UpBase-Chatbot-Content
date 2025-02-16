@@ -10,7 +10,7 @@ client = SingletonGPT.get_instance().gpt
 with open("config/prompt.yaml") as stream:
     prompt = yaml.safe_load(stream)
 
-with open("data/hook.yaml") as stream:
+with open("resource/hook.yaml") as stream:
     hook = yaml.safe_load(stream)
 
 introduce_types = [
@@ -117,7 +117,7 @@ def generate_end(structure, description, hook_sentence, introduce, main):
     return response.choices[0].message.content
 
 
-def genenrate_conten(description):
+def genenrate_content(description):
     # genenrate hook
     structures_id = random.randint(0, len(structures) - 1)
     hook_sentence = generate_hook(

@@ -1,2 +1,2 @@
 from .llm import SingletonGPT
-from .gpt import genenrate_conten
+from .gpt import genenrate_content
