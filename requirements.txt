@@ -25,3 +25,6 @@ langchain-community
 langchain-anthropic
 tavily-python
 langchain_openai
+langgraph 
+langsmith 
+langchain_anthropic
