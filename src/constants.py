@@ -1,1 +1,2 @@
-CALL_OPENAI = "call_openai"
+CALL_OPENAI = 0
+CREATE_CARD = 1
