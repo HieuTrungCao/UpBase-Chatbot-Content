@@ -1,0 +1,80 @@
+{
+    "header": {
+        "title": {
+            "tag": "plain_text",
+            "content": "Tạo kịch bản quảng cáo sản phẩm"
+        },
+        "template": "turquoise"
+    },
+    "tag": "form",
+    "elements": [
+        {
+            "tag": "action",
+            "actions": [
+                {
+                    "tag": "input",
+                    "input_type": "multiline_text",
+                    "rows": 10,
+                    "auto_resize": true,
+                    "placeholder": {
+                        "tag": "plain_text",
+                        "content": "Các câu hook mẫu"
+                    },
+                    "default_value": "",
+                    "width": "fill",
+                    "label": {
+                        "tag": "plain_text",
+                        "content": "Câu hook:"
+                    },
+                    "max_length": 1000,
+                    "name": "Input_hook",
+                    "fallback": {
+                        "tag": "fallback_text",
+                        "text": {
+                            "tag": "plain_text",
+                            "content": "Fallback text"
+                        }
+                    },
+                    "value": {
+                        "key": "hook"
+                    }
+                },
+                {
+                    "tag": "input",
+                    "input_type": "multiline_text",
+                    "rows": 10,
+                    "auto_resize": true,
+                    "placeholder": {
+                        "tag": "plain_text",
+                        "content": "Mô tả sản phẩm:"
+                    },
+                    "default_value": "",
+                    "width": "fill",
+                    "label": {
+                        "tag": "plain_text",
+                        "content": "Mô tả sản phẩm:"
+                    },
+                    "name": "Input_description",
+                    "fallback": {
+                        "tag": "fallback_text",
+                        "text": {
+                            "tag": "plain_text",
+                            "content": "Fallback text"
+                        }
+                    },
+                    "value": {
+                        "key": "description"
+                    }
+                },
+                {
+                    "tag": "button",
+                    "type": "laser",
+                    "text": {
+                        "tag": "plain_text",
+                        "content": "Tạo kịch bản"
+                    }
+                }
+            ]
+        }
+    ]   
+}
