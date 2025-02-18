@@ -14,7 +14,12 @@ from lark_oapi.api.im.v1 import (
 from .client import SingletonLark
 from src.utils import SingletonQueue
 from src.llms import genenrate_content
-from src.constants import CALL_OPENAI
+from src.constants import (
+    CALL_OPENAI, 
+    CREATE_CARD,
+    NOTIFY_CONTENT
+)
+from src.lark.card import create_card
 
 resp_queue = SingletonQueue.get_instance()
 client = SingletonLark.get_instance()
@@ -61,7 +66,7 @@ def create_request_normal(data: P2ImMessageReceiveV1, content: str) -> CreateMes
     
     return request
 
-def send_request(data: P2ImMessageReceiveV1):
+def send_content_request(data: P2ImMessageReceiveV1):
     # answer = call_openai(msg.content)
     # content = genenrate_content(description=msg.content)
 
@@ -77,8 +82,29 @@ def send_request(data: P2ImMessageReceiveV1):
         raise Exception(
             f"client.im.v1.chat.create failed, code: {response.code}, msg: {response.msg}, log_id: {response.get_log_id()}")
 
+def send_notify_request(data: P2ImMessageReceiveV1):
+    request = CreateMessageRequest.builder() \
+        .receive_id_type("chat_id") \
+        .request_body(CreateMessageRequestBody.builder()
+                        .receive_id(data.event.message.chat_id)
+                        .msg_type("text")
+                        .content(lark.JSON.marshal({"text": "Hệ thống chưa hỗ trợ tạo kịch bản ngoài thread!"}))
+                        .build()) \
+        .build()
 
+    response = client.client.im.v1.chat.create(request) 
+    if not response.success():
+        raise Exception(
+            f"client.im.v1.chat.create failed, code: {response.code}, msg: {response.msg}, log_id: {response.get_log_id()}")
 
 def do_p2_im_message_receive_v1(data: P2ImMessageReceiveV1):
-    resp_queue.put((CALL_OPENAI, data, send_request))
-    
+    print("data: ", data.event.message.content)
+    if data.event.message.thread_id is None and "/card" in data.event.message.content:
+        resp_queue.put((CREATE_CARD, data, create_card))
+        return
+
+    if data.event.message.thread_id is None and "/card" not in data.event.message.content:
+        resp_queue.put((NOTIFY_CONTENT, data, send_notify_request))
+        return
+
+    resp_queue.put((CALL_OPENAI, data, send_content_request))

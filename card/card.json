@@ -72,6 +72,9 @@
                     "text": {
                         "tag": "plain_text",
                         "content": "Tạo kịch bản"
+                    },
+                    "value": {
+                        "key": "create"
                     }
                 }
             ]
