@@ -8,7 +8,8 @@ from lark_oapi.adapter.flask import parse_req, parse_resp
 from lark_oapi import EventDispatcherHandler, LogLevel
 from dotenv import load_dotenv
 
-from src.lark import do_p2_im_message_receive_v1
+from src.lark.lib.action_handler import CardActionHandler
+from src.lark import do_p2_im_message_receive_v1, do_interactive_card
 from src.utils import call_llm
 
 load_dotenv()
@@ -23,6 +24,10 @@ event_handler = EventDispatcherHandler.builder(ENCRYPT_KEY, VERIFICATION_TOKEN, 
     .build()
             
 
+card_handler = CardActionHandler.builder(ENCRYPT_KEY, VERIFICATION_TOKEN, LogLevel.DEBUG) \
+    .register(do_interactive_card) \
+    .build()
+
 thread = threading.Thread(target=call_llm, daemon=True) # daemon=True important
 thread.start()
 
@@ -30,6 +35,11 @@ thread.start()
 @app.route("/event", methods=["POST"])
 def event():
     resp = event_handler.do(parse_req())
+    return parse_resp(resp)
+
+@app.route("/card", methods=["POST"])
+def card():
+    resp = card_handler.do(parse_req())
     return parse_resp(resp)
 
 app.run(port=3000, debug=True)
