@@ -2,82 +2,88 @@
     "header": {
         "title": {
             "tag": "plain_text",
-            "content": "Tạo kịch bản quảng cáo sản phẩm"
+            "i18n": {
+                "vi_vn": "Tạo kịch bản quảng cáo sản phẩm"
+            }
         },
         "template": "turquoise"
     },
-    "tag": "form",
-    "elements": [
-        {
-            "tag": "action",
-            "actions": [
-                {
-                    "tag": "input",
-                    "input_type": "multiline_text",
-                    "rows": 10,
-                    "auto_resize": true,
-                    "placeholder": {
-                        "tag": "plain_text",
-                        "content": "Các câu hook mẫu"
-                    },
-                    "default_value": "",
-                    "width": "fill",
-                    "label": {
-                        "tag": "plain_text",
-                        "content": "Câu hook:"
-                    },
-                    "max_length": 1000,
-                    "name": "Input_hook",
-                    "fallback": {
-                        "tag": "fallback_text",
-                        "text": {
+    "i18n_elements": {
+        "zh_cn": [
+            {
+                "tag": "form",
+                "elements": [
+                    {
+                        "tag": "input",
+                        "input_type": "multiline_text",
+                        "rows": 10,
+                        "placeholder": {
                             "tag": "plain_text",
-                            "content": "Fallback text"
+                            "content": "Các câu hook mẫu"
+                        },
+                        "max_length": 1000,
+                        "default_value": "",
+                        "width": "fill",
+                        "label": {
+                            "tag": "plain_text",
+                            "content": "Câu hook"
+                        },
+                        "name": "hook_sentence",
+                        "fallback": {
+                            "tag": "fallback_text",
+                            "text": {
+                                "tag": "plain_text",
+                                "content": "Hook fallback"
+                            }
                         }
                     },
-                    "value": {
-                        "key": "hook"
-                    }
-                },
-                {
-                    "tag": "input",
-                    "input_type": "multiline_text",
-                    "rows": 10,
-                    "auto_resize": true,
-                    "placeholder": {
-                        "tag": "plain_text",
-                        "content": "Mô tả sản phẩm:"
-                    },
-                    "default_value": "",
-                    "width": "fill",
-                    "label": {
-                        "tag": "plain_text",
-                        "content": "Mô tả sản phẩm:"
-                    },
-                    "name": "Input_description",
-                    "fallback": {
-                        "tag": "fallback_text",
-                        "text": {
+                    {
+                        "tag": "input",
+                        "input_type": "multiline_text",
+                        "rows": 10,
+                        "auto_resize": true,
+                        "placeholder": {
                             "tag": "plain_text",
-                            "content": "Fallback text"
+                            "content": "Mô tả sản phẩm"
+                        },
+                        "max_length": 1000,
+                        "default_value": "",
+                        "width": "fill",
+                        "label": {
+                            "tag": "plain_text",
+                            "content": "Mô tả sản phẩm:"
+                        },
+                        "name": "description",
+                        "fallback": {
+                            "tag": "fallback_text",
+                            "text": {
+                                "tag": "plain_text",
+                                "content": "Mô tả sản phẩm fallback"
+                            }
                         }
                     },
-                    "value": {
-                        "key": "description"
+                    {
+                        "tag": "button",
+                        "text": {
+                            "tag": "plain_text",
+                            "content": "Tạo kịch bản"
+                        },
+                        "type": "laser",
+                        "complex_interaction": true,
+                        "action_type": "form_submit",
+                        "name": "create"
                     }
-                },
-                {
-                    "tag": "button",
-                    "type": "laser",
+                ],
+                "name": "Form_lrocopxr",
+                "fallback": {
+                    "tag": "fallback_text",
                     "text": {
                         "tag": "plain_text",
-                        "content": "Tạo kịch bản"
-                    },
-                    "value": {
-                        "key": "create"
+                        "content": "仅支持在 V6.6 及以上版本使用"
                     }
                 }
-            ]
-        }
-    ]   
+            }
+        ]
+    },
+    "i18n_header": {}
 }
