@@ -1,0 +1,5 @@
+DATABASE: "demo"
+USER: "postgres"
+HOST: "localhost"
+PASSWORD: "242003"
+PORT: 5432
