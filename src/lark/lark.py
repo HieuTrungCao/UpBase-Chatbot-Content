@@ -20,9 +20,11 @@ from src.constants import (
     NOTIFY_CONTENT
 )
 from src.lark.card import create_card
+from src.postgres import Connector
 
 resp_queue = SingletonQueue.get_instance()
 client = SingletonLark.get_instance()
+connector = Connector.get_instance()
 
 def get_chat_history(data: P2ImMessageReceiveV1) -> ListMessageResponse:
     if data.event.message.thread_id is None:
@@ -41,6 +43,14 @@ def get_chat_history(data: P2ImMessageReceiveV1) -> ListMessageResponse:
         return
     
     return response
+
+def save_message(data: P2ImMessageReceiveV1):
+    message_id = data.event.message.message_id
+    thread_id = data.event.message.thread_id
+    content = data.event.message.content
+    create_time = data.header.create_time
+
+    connector.insert_message((message_id, thread_id, content, create_time))
 
 def create_request_thread(data: P2ImMessageReceiveV1, content: str) -> ReplyMessageRequest:
     request: ReplyMessageRequest = ReplyMessageRequest.builder() \
@@ -78,6 +88,8 @@ def send_content_request(data: P2ImMessageReceiveV1):
         request = create_request_thread(data, content)
 
     response = client.client.im.v1.chat.create(request) 
+    save_message(data)
+
     if not response.success():
         raise Exception(
             f"client.im.v1.chat.create failed, code: {response.code}, msg: {response.msg}, log_id: {response.get_log_id()}")
@@ -98,7 +110,6 @@ def send_notify_request(data: P2ImMessageReceiveV1):
             f"client.im.v1.chat.create failed, code: {response.code}, msg: {response.msg}, log_id: {response.get_log_id()}")
 
 def do_p2_im_message_receive_v1(data: P2ImMessageReceiveV1):
-    print("data: ", data.event.message.content)
     if data.event.message.thread_id is None and "/card" in data.event.message.content:
         resp_queue.put((CREATE_CARD, data, create_card))
         return
