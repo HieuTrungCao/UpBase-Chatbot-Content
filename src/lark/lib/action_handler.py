@@ -35,10 +35,20 @@ class CardActionHandler(HttpHandler):
 
             # 消息解密
             plaintext = self._decrypt(req.body)
-            print("Plaintext: ", plaintext)
             # 反序列化
             card = JSON.unmarshal(plaintext, Card)
             card.raw = req
+
+            if card.type is not None and URL_VERIFICATION == card.type:
+                # 验证回调地址
+                # 校验 token
+                if self._verification_token != card.token:
+                    raise AccessDeniedException("invalid verification_token")
+
+                # 返回 Challenge Code
+                resp_body = "{\"challenge\":\"%s\"}" % card.challenge
+                resp.content = resp_body.encode(UTF_8)
+                return resp
 
             if self._processor is None:
                 raise CardException("processor not found")
