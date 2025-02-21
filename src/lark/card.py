@@ -17,12 +17,16 @@ from src.constants import (
     CREATE_THREAD
 )
 from src.postgres import Connector
+from src.bot import Bot
+from src.utils import get_structure, get_style, ContentList
 
 card_config = json.load(open("card/card.json"))
 
 client = SingletonLark.get_instance()
 resp_queue = SingletonQueue.get_instance()
 connector = Connector.get_instance()
+bot = Bot.get_instance()
+contents = ContentList.get_instance()
 
 def create_request_thread(data: Card, content: str) -> ReplyMessageRequest:
     request: ReplyMessageRequest = ReplyMessageRequest.builder() \
@@ -53,8 +57,6 @@ def create_card(data: P2ImMessageReceiveV1) -> None:
             f"client.im.v1.chat.create failed, code: {response.code}, msg: {response.msg}, log_id: {response.get_log_id()}")
 
 def create_first_content(data: Card):
-    # answer = call_openai(msg.content)
-    # content = genenrate_content(description=msg.content)
 
     card_id = data.event.context.open_message_id
     user_id = data.event.operator.union_id
@@ -62,12 +64,18 @@ def create_first_content(data: Card):
     description = data.event.action.form_value["description"]
     create_time = data.header.create_time
 
-    content = json.dumps({"text": "First Content"})
+    content = bot.generate_content(
+        structure=get_structure(),
+        style=get_style(),
+        description=description,
+        hook=hook_sentence
+    )
+
+    contents.put_content(content)
+    content = json.dumps({"text": content})
 
     request = create_request_thread(data, content)
-
     response = client.client.im.v1.chat.create(request) 
-
     resp = json.loads(response.raw.content)
     thread_id = resp["data"]["thread_id"]
     connector.insert_card((card_id, user_id, hook_sentence, description, thread_id, create_time))
