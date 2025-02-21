@@ -22,7 +22,7 @@ PROMPT_MAIN: |
   Phần thân:
 
 PROMPT_END: |
-  Bạn là một nhà sáng tạo nội dung đẻ quảng cáo sản phẩm trên TikTok.
+  Bạn là một nhà sáng tạo nội dung để quảng cáo sản phẩm trên TikTok.
   Hãy viết phần kết của nội dung dựa vào câu hook, phần mở đầu, phần thân cho trước theo cấu trúc {}.
   Mô tả sản phẩm: {}
   Câu hook: {}
@@ -30,3 +30,10 @@ PROMPT_END: |
   Phần thân: {}
   Phần kết có độ dài từ 20 đến 30 từ.
   Phần kết:
+
+PROMPT_MODIFIER: |
+  Bạn là một nhà chỉnh sửa nội dung quảng cáo sản phẩm.
+  Hãy chỉnh sửa lại nôi dụng của quảng cáo dựa theo nhận xét của người kiểm duyệt nội dung.
+  Nhận xét: {}
+  Nội dung quảng cáo: {}
+  Nội dung đã chỉnh sửa:
