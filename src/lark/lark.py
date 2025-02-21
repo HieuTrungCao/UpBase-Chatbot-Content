@@ -21,10 +21,14 @@ from src.constants import (
 )
 from src.lark.card import create_card
 from src.postgres import Connector
+from src.bot import Bot
+from src.utils import ContentList
 
 resp_queue = SingletonQueue.get_instance()
 client = SingletonLark.get_instance()
 connector = Connector.get_instance()
+bot = Bot.get_instance()
+contents = ContentList.get_instance()
 
 def get_chat_history(data: P2ImMessageReceiveV1) -> ListMessageResponse:
     if data.event.message.thread_id is None:
@@ -77,10 +81,15 @@ def create_request_normal(data: P2ImMessageReceiveV1, content: str) -> CreateMes
     return request
 
 def send_content_request(data: P2ImMessageReceiveV1):
-    # answer = call_openai(msg.content)
-    # content = genenrate_content(description=msg.content)
+    
+    content = bot.modify_content(
+        content=contents.get_content(), 
+        content_feedback=data.event.message.content
+    )
 
-    content = json.dumps({"text": "Answer in thread"})
+    contents.put_content(content)
+
+    content = json.dumps({"text": content})
 
     if data.event.message.thread_id is None:
         request = create_request_normal(data, content)
@@ -118,4 +127,5 @@ def do_p2_im_message_receive_v1(data: P2ImMessageReceiveV1):
         resp_queue.put((NOTIFY_CONTENT, data, send_notify_request))
         return
 
+    print("Oge oge ")
     resp_queue.put((CALL_OPENAI, data, send_content_request))
