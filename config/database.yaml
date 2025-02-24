@@ -1,5 +1,5 @@
-DATABASE: "demo"
+DATABASE: "content_generation"
 USER: "postgres"
-HOST: "localhost"
+HOST: "db"
 PASSWORD: "242003"
 PORT: 5432

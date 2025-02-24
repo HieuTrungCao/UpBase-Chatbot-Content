@@ -1,0 +1,1 @@
+docker run --network=host -p 3000:3000 -e OPENAI_API_KEY="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" caotrunghieu/upbase-chatbot-generate-content:v0.1
