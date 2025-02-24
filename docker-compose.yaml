@@ -21,5 +21,9 @@ services:
       - 5432
     networks:
       - my-network
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
 networks:
   my-network:
+volumes:
+  postgres_data:
