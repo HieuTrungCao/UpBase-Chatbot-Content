@@ -12,7 +12,8 @@ from .state import (
     IntroState,
     MainState,
     EndState,
-    ModifierState
+    ModifierState,
+    CheckerState
 )
 
 class ContentGraph:
@@ -301,3 +302,42 @@ class ModifierGraph:
 
         modified_content = self.llm.invoke(prompt)
         return {"modified_content": modified_content.content}
+    
+class CheckerGraph:
+    __instance = None
+    __lock = threading.Lock()
+
+    def __init__(self, llm, prompt_checker_file):
+        if CheckerGraph.__instance is not None:
+            raise Exception("Only single graph created")
+        
+        self._graph_builder = StateGraph(CheckerState)
+        self.graph: CompiledStateGraph = None
+        self.llm: BaseChatModel = llm
+        with open(prompt_checker_file) as stream:
+            data = yaml.safe_load(stream)
+            self.prompt_checker: str = data["PROMPT_CHECKER"]
+            self.policy = data["POLICY"]
+
+    @staticmethod
+    def get_instance(llm, prompt_checker):
+        with CheckerGraph.__lock:
+            if CheckerGraph.__instance is None:
+                CheckerGraph.__instance = CheckerGraph(llm, prompt_checker)
+            
+            return CheckerGraph.__instance
+        
+    def graph_builder(self):
+        self._graph_builder.add_node("content_checker", self.check_content)
+        self._graph_builder.add_edge(START, "content_checker")
+        self._graph_builder.add_edge("content_checker", END)
+        self.graph = self._graph_builder.compile()
+
+    def check_content(self, state: ModifierState):
+        prompt = self.prompt_checker.format(
+            state['content'],
+            self.policy
+        )
+
+        modified_content = self.llm.invoke(prompt)
+        return {"feedback": modified_content.content}
