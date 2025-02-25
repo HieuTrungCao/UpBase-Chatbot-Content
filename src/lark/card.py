@@ -67,11 +67,19 @@ def check_policy(data: Card):
         content=data.event.action.form_value["content"]
     )
 
+    card_id = data.event.context.open_message_id
+    user_id = data.event.operator.union_id
+    content = data.event.action.form_value["content"]
+    create_time = data.header.create_time
+
     content = json.dumps({"text": feedback})
 
     request = create_request_thread(data, content)
     response = client.client.im.v1.chat.create(request) 
 
+    resp = json.loads(response.raw.content)
+    thread_id = resp["data"]["thread_id"]
+    connector.insert_policy((card_id, user_id, content, thread_id, create_time))
     if not response.success():
         raise Exception(
             f"client.im.v1.chat.create failed, code: {response.code}, msg: {response.msg}, log_id: {response.get_log_id()}"  

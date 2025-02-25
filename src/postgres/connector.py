@@ -34,7 +34,7 @@ class Connector:
         return self.connector.cursor()
     
     def insert_thread(self, _cursor, data: str):
-        query = "INSERT INTO thread(thread_id) values('" + data + "');"
+        query = "INSERT INTO thread(thread_id) values('" + data + "') ON CONFLICT (thread_id) DO NOTHING;"
         _cursor.execute(query=query)
         self.connector.commit()
 
@@ -50,6 +50,16 @@ class Connector:
     def insert_message(self, data: Tuple[str, str, str, str]):
         query = "INSERT INTO messages(message_id, thread_id, content, create_time) values('" + "', '".join(data) + "');"
         _cursor = self.cursor()
+        _cursor.execute(query=query)
+        self.connector.commit()
+        _cursor.close()
+
+    def insert_policy(self, data: Tuple[str, str, str, str, str, str]):
+        
+        query = "INSERT INTO policy(card_id, user_id, content, thread_id, create_time) values('" + "', '".join(data) + "');"
+        print("Query.: ", query)
+        _cursor = self.cursor()
+        self.insert_thread(_cursor, data[3])
         _cursor.execute(query=query)
         self.connector.commit()
         _cursor.close()
