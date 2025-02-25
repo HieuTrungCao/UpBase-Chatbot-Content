@@ -41,3 +41,7 @@ class ModifierState(TypedDict):
     content: str
     feedback: str
     modified_content: str
+
+class CheckerState(TypedDict):
+    content: str
+    feedback: str

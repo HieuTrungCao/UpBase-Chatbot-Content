@@ -1,7 +1,7 @@
 import threading
 
 from .llm import GPTModel
-from .graph import ContentGraph, ModifierGraph
+from .graph import ContentGraph, ModifierGraph, CheckerGraph
 
 class Bot:
     __instance = None
@@ -17,6 +17,9 @@ class Bot:
 
         self.moodifier_agent = ModifierGraph(self.llm, prompt_modifier_file="config/prompt.yaml")
         self.moodifier_agent.graph_builder()
+
+        self.checker_agent = CheckerGraph(self.llm, prompt_checker_file="config/prompt.yaml")
+        self.checker_agent.graph_builder()
 
     @staticmethod
     def get_instance():
@@ -45,3 +48,9 @@ class Bot:
             {"configurable": {"thread_id": "1"}}):
         
             return content["content_modifier"]["modified_content"]
+        
+    def check_policy(self, content):
+        for content in self.checker_agent.graph.stream({
+                "content": content,
+            }):     
+            return content["content_checker"]["feedback"]
