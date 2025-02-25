@@ -33,15 +33,22 @@ class Connector:
     def cursor(self):
         return self.connector.cursor()
     
-    def insert_card(self, data: Tuple[str, str, str, str, str, str]):
-        query = "INSERT INTO card(card_id, user_id, hook, description, thread_id, create_time) values('" + "', '".join(data) + "');"
+    def insert_thread(self, _cursor, data: str):
+        query = "INSERT INTO thread(thread_id) values('" + data + "');"
+        _cursor.execute(query=query)
+        self.connector.commit()
+
+    def insert_content(self, data: Tuple[str, str, str, str, str, str]):
+        
+        query = "INSERT INTO content(card_id, user_id, hook, description, thread_id, create_time) values('" + "', '".join(data) + "');"
         _cursor = self.cursor()
+        self.insert_thread(_cursor, data[4])
         _cursor.execute(query=query)
         self.connector.commit()
         _cursor.close()
 
     def insert_message(self, data: Tuple[str, str, str, str]):
-        query = "INSERT INTO message(message_id, thread_id, content, create_time) values('" + "', '".join(data) + "');"
+        query = "INSERT INTO messages(message_id, thread_id, content, create_time) values('" + "', '".join(data) + "');"
         _cursor = self.cursor()
         _cursor.execute(query=query)
         self.connector.commit()
