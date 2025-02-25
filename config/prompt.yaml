@@ -37,3 +37,31 @@ PROMPT_MODIFIER: |
   Nhận xét: {}
   Nội dung quảng cáo: {}
   Nội dung đã chỉnh sửa:
+
+PROMPT_CHECKER: |
+  Bạn là một nhà kiểm duyệt nội dung quảng cáo sản phẩm trên TikTok.
+  Hãy kiểm tra kịch bản sau và liệt kê ra những phần bị vi phạm và đề xuất chỉnh sửa lại kịch bản.
+  Kịch bản: {}
+  Chính sách: {}
+  Kết quả:
+  
+POLICY: |
+  Lặp đi lặp lại nhiều lần thông tin mang tính chất spam.
+    Ví dụ:
+      - Nhãn hiệu A, nhãn hiệu A, nhãn hiệu A
+      - Tên Tiktok Shop: .vn.
+  Nói quá về công dụng sản phẩm: Nội dung không chứa lời hứa phóng đại về hiệu suất và tác dụng của sản phẩm.
+    Ví dụ:
+      - Kem dưỡng da: Có đôi chân thon gọn ngay.
+      - Quảng cáo có thể chưa khỏi bệnh nan y.
+  So sánh ác ý với các sản phẩm hoặc trang thương mại điện tử khác.
+    Ví dụ: 
+      - Sản phẩm này rẻ hơn XX so với trang web ABC.
+  Tuyên bố sai sự thật về sản phẩm.
+    Ví dụ:
+      - Tuyên bố sai sự thật sản phẩm đạt giải, chứng nhận mà không có giấy tờ chứng minh hoặc có liên kết với các sản phẩm khác.
+  Nội dung không phù hợp với sản phẩm thực tế và gây hiểu lầm.
+    Ví dụ:
+      - Nội dung không đúng hoặc thiếu sót.
+      - Thông tin gây hiểu lầm, như giá hoặc chiết khấu không nhất trí, hình ảnh, tên thương hiệu, mô tả, thuộc tính chính, kiểu, thuộc tính bán hàng, cam kết hoặc bảo hành sản phẩm.
+      - Thông tin hiểu lầm liên quan đến các dịch vụ.

@@ -17,7 +17,8 @@ from src.llms import genenrate_content
 from src.constants import (
     CALL_OPENAI, 
     CREATE_CARD,
-    NOTIFY_CONTENT
+    NOTIFY_CONTENT,
+    CHECK_POLICY
 )
 from src.lark.card import create_card
 from src.postgres import Connector
@@ -119,11 +120,15 @@ def send_notify_request(data: P2ImMessageReceiveV1):
             f"client.im.v1.chat.create failed, code: {response.code}, msg: {response.msg}, log_id: {response.get_log_id()}")
 
 def do_p2_im_message_receive_v1(data: P2ImMessageReceiveV1):
-    if data.event.message.thread_id is None and "/card" in data.event.message.content:
+    if data.event.message.thread_id is None and "/content" in data.event.message.content:
         resp_queue.put((CREATE_CARD, data, create_card))
         return
 
-    if data.event.message.thread_id is None and "/card" not in data.event.message.content:
+    if data.event.message.thread_id is None and "/policy" in data.event.message.content:
+        resp_queue.put((CHECK_POLICY, data, create_card))
+        return
+    
+    if data.event.message.thread_id is None and "/content" not in data.event.message.content:
         resp_queue.put((NOTIFY_CONTENT, data, send_notify_request))
         return
 

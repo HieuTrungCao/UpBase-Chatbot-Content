@@ -21,6 +21,7 @@ from src.bot import Bot
 from src.utils import get_structure, get_style, ContentList
 
 card_config = json.load(open("card/card.json"))
+policy_config = json.load(open("card/policy.json"))
 
 client = SingletonLark.get_instance()
 resp_queue = SingletonQueue.get_instance()
@@ -40,13 +41,18 @@ def create_request_thread(data: Card, content: str) -> ReplyMessageRequest:
 
     return request
     
-def create_card(data: P2ImMessageReceiveV1) -> None:
+def create_card(data: P2ImMessageReceiveV1, is_create_content = True) -> None:
+    if is_create_content:
+        _card_config = card_config
+    else: 
+        _card_config = policy_config
+
     request = CreateMessageRequest.builder() \
         .receive_id_type("chat_id") \
         .request_body(CreateMessageRequestBody.builder()
                       .receive_id(data.event.message.chat_id)
                       .msg_type("interactive")
-                      .content(lark.JSON.marshal(card_config))
+                      .content(lark.JSON.marshal(_card_config))
                       .build()) \
         .build()
     
@@ -55,6 +61,21 @@ def create_card(data: P2ImMessageReceiveV1) -> None:
     if not response.success():
         raise Exception(
             f"client.im.v1.chat.create failed, code: {response.code}, msg: {response.msg}, log_id: {response.get_log_id()}")
+
+def check_policy(data: Card):
+    feedback = bot.check_policy(
+        content=data.event.action.form_value["content"]
+    )
+
+    content = json.dumps({"text": feedback})
+
+    request = create_request_thread(data, content)
+    response = client.client.im.v1.chat.create(request) 
+
+    if not response.success():
+        raise Exception(
+            f"client.im.v1.chat.create failed, code: {response.code}, msg: {response.msg}, log_id: {response.get_log_id()}"  
+        )
 
 def create_first_content(data: Card):
 
@@ -78,7 +99,7 @@ def create_first_content(data: Card):
     response = client.client.im.v1.chat.create(request) 
     resp = json.loads(response.raw.content)
     thread_id = resp["data"]["thread_id"]
-    connector.insert_card((card_id, user_id, hook_sentence, description, thread_id, create_time))
+    connector.insert_content((card_id, user_id, hook_sentence, description, thread_id, create_time))
     if not response.success():
         raise Exception(
             f"client.im.v1.chat.create failed, code: {response.code}, msg: {response.msg}, log_id: {response.get_log_id()}"  
@@ -118,10 +139,14 @@ def save_hook_sentence(data: Card):
     
 
 def do_interactive_card(data: Card):
-    if data.event is not None and data.event.action.tag == "button":
+    if data.event is not None and data.event.action.name == "create":
         resp_queue.put((CREATE_THREAD, data, create_first_content))
         resp_queue.put((CREATE_THREAD, data, save_user_id))
         resp_queue.put((CREATE_THREAD, data, save_hook_sentence))
+        return card_config
+
+    if data.event is not None and data.event.action.name == "check":
+        resp_queue.put((CREATE_THREAD, data, check_policy))
         return card_config
     
     return card_config
