@@ -1,0 +1,65 @@
+{
+    "header": {
+        "title": {
+            "tag": "plain_text",
+            "i18n": {
+                "vi_vn": "Tạo kịch bản quảng cáo sản phẩm"
+            }
+        },
+        "template": "turquoise"
+    },
+    "i18n_elements": {
+        "zh_cn": [
+            {
+                "tag": "form",
+                "elements": [
+                    {
+                        "tag": "input",
+                        "input_type": "multiline_text",
+                        "rows": 10,
+                        "auto_resize": true,
+                        "placeholder": {
+                            "tag": "plain_text",
+                            "content": "Nội dung kịch bản"
+                        },
+                        "max_length": 1000,
+                        "default_value": "",
+                        "width": "fill",
+                        "label": {
+                            "tag": "plain_text",
+                            "content": "Nội dung kịch bản:"
+                        },
+                        "name": "content",
+                        "fallback": {
+                            "tag": "fallback_text",
+                            "text": {
+                                "tag": "plain_text",
+                                "content": "Checking policy fallback"
+                            }
+                        }
+                    },
+                    {
+                        "tag": "button",
+                        "text": {
+                            "tag": "plain_text",
+                            "content": "Kiểm tra"
+                        },
+                        "type": "laser",
+                        "complex_interaction": true,
+                        "action_type": "form_submit",
+                        "name": "check"
+                    }
+                ],
+                "name": "Form_lrocopxr",
+                "fallback": {
+                    "tag": "fallback_text",
+                    "text": {
+                        "tag": "plain_text",
+                        "content": "仅支持在 V6.6 及以上版本使用"
+                    }
+                }
+            }
+        ]
+    },
+    "i18n_header": {}
+}
