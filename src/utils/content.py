@@ -25,3 +25,6 @@ class ContentList:
 
     def put_content(self, content):
         self.contents.append(content)
+
+    def length(self):
+        return len(self.contents)
