@@ -2,7 +2,7 @@ version: '3'
 
 services:
   app:
-    image: caotrunghieu/upbase-chatbot-generate-content:v0.1
+    image: caotrunghieu/upbase-chatbot-generate-content:v1.0
     ports:
       - "3000:3000"
     environment:
@@ -12,7 +12,7 @@ services:
     networks:
       - my-network
   db:
-    image: caotrunghieu/postgres-content-generation:v0.1
+    image: caotrunghieu/postgres-content-generation:v1.0
     environment:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: "242003"
