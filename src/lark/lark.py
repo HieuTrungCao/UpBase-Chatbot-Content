@@ -104,15 +104,14 @@ def send_content_request(data: P2ImMessageReceiveV1):
         raise Exception(
             f"client.im.v1.chat.create failed, code: {response.code}, msg: {response.msg}, log_id: {response.get_log_id()}")
 
-def send_notify_request(data: P2ImMessageReceiveV1):
-    request = CreateMessageRequest.builder() \
-        .receive_id_type("chat_id") \
-        .request_body(CreateMessageRequestBody.builder()
-                        .receive_id(data.event.message.chat_id)
-                        .msg_type("text")
-                        .content(lark.JSON.marshal({"text": "Hệ thống chưa hỗ trợ tạo kịch bản ngoài thread!"}))
-                        .build()) \
-        .build()
+def send_notify_request(data: P2ImMessageReceiveV1, message: str):
+    
+    message = json.dumps({"text": message})
+    
+    if data.event.message.thread_id is None:
+        request = create_request_normal(data, message)
+    else:
+        request = create_request_thread(data, message)
 
     response = client.client.im.v1.chat.create(request) 
     if not response.success():
@@ -128,9 +127,24 @@ def do_p2_im_message_receive_v1(data: P2ImMessageReceiveV1):
         resp_queue.put((CHECK_POLICY, data, create_card))
         return
     
-    if data.event.message.thread_id is None and "/content" not in data.event.message.content:
-        resp_queue.put((NOTIFY_CONTENT, data, send_notify_request))
+    if data.event.message.thread_id is None:
+        resp_queue.put((NOTIFY_CONTENT, data, send_notify_request, "Hệ thống chưa hỗ trợ tạo và kiểm tra kịch bản ngoài thread!"))
         return
 
-    print("Oge oge ")
-    resp_queue.put((CALL_OPENAI, data, send_content_request))
+    if data.event.message.thread_id is not None and "/policy" in data.event.message.content:
+        resp_queue.put((NOTIFY_CONTENT, data, send_notify_request, "Hệ thống chưa hỗ trợ kiểm tra kịch bản trong thread!"))
+        return
+    
+    if data.event.message.thread_id is not None and "/content" in data.event.message.content:
+        resp_queue.put((NOTIFY_CONTENT, data, send_notify_request, "Hệ thống chưa hỗ trợ tạo kịch bản trong thread!"))
+        return
+    
+    if data.event.message.thread_id is not None and contents.length() == 0:
+        resp_queue.put((NOTIFY_CONTENT, data, send_notify_request, "Không có kịch bản nào để chỉnh sửa!"))
+        return
+    
+    if data.event.message.thread_id is not None and contents.length() > 0:
+        resp_queue.put((CALL_OPENAI, data, send_content_request))
+        return
+
+    resp_queue.put((NOTIFY_CONTENT, data, send_content_request, "Câu lệnh không phù hợp!"))   
