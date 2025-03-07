@@ -31,3 +31,8 @@ langchain_anthropic
 # psycopg2==2.9.5
 psycopg2-binary==2.9.5
 langchain-deepseek
+langchain-google-community
+tavily-python
+langchainhub
+huggingface_hub
+langchain-huggingface
